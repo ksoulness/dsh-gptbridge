@@ -152,6 +152,7 @@ docs/                架构、域名接入、安全、排障
 - [安全与密钥管理](docs/SECURITY.md)
 - [排障手册](docs/TROUBLESHOOTING.md)
 - [在 ChatGPT 里配置连接器](docs/CHATGPT-CONNECTOR.md)
+- [**怎么跟 GPT 描述任务（提示词模板）**](docs/PROMPTING.md)
 - [legacy：ACP 网关](legacy/README.md)
 
 ## 边界与免责
