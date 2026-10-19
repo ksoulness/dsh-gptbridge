@@ -62,7 +62,17 @@ node .\app\tests\run-relay.mjs        # 7 项，不发真实任务
 $env:DO_RUN='1'; node .\app\tests\run-relay.mjs   # 全闭环：start_review → wait_run → (可选) 归档
 ```
 
-owner 口令在 `app/config/secrets/OWNER-PASSWORD.txt`（`init-auth.ps1` 生成，务必自行保存/改掉）。
+`init-auth.ps1` 会**交互提示**你设置 Owner 口令（不回显），并把它同时写到
+`app/config/secrets/OWNER-PASSWORD.txt`（明文、仅本机可读，已被 `.gitignore` 忽略）——授权页要输入的就是它。
+
+需要非交互（CI/自动化）时：
+
+```powershell
+$env:DSH_GPTBRIDGE_OWNER_PASSWORD='你的强口令(>=8位)'
+powershell -NoProfile -ExecutionPolicy Bypass -File .\app\scripts\init-auth.ps1
+```
+
+轮换口令/pepper（会让所有既有令牌立即失效）：加 `-Force` 重跑。
 
 ## 接到你自己的域名（Cloudflare Named Tunnel）
 
