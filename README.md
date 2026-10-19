@@ -121,12 +121,17 @@ relay 的三个权限档：`read-only` / `workspace-write` / `danger-full-access
 - `start_run` 如果调用方**不传** `permissionPreset`，relay 默认也是 `read-only`；而 `workspace-write` 一旦碰到越界写入或需要确认的动作，会**等人点确认** —— 远端连接器没人点，表现就是"卡住不动"。
 - 因此本适配器对 `start_run` 做了默认注入：`permissionPreset` 取 `app/config/config.json` 的 `runPermissionPreset`（默认 `danger-full-access`），并在选到危险档时补 `confirmedDangerousPermission: true`。
 
-想收紧就改配置：
+两个键控制行为：
 
 ```jsonc
 // app/config/config.json
-{ "runPermissionPreset": "workspace-write" }   // 或 "read-only"
+{
+  "runPermissionPreset": "danger-full-access",   // read-only | workspace-write | danger-full-access
+  "runPermissionPresetMode": "enforce"           // enforce=无视调用方的更弱档位（默认）；default-when-omitted=只在没传时注入
+}
 ```
+
+被强制覆盖时会写审计 `start_run_preset_overridden {from,to}`，每次调用的最终档位记在 `start_run_args`。
 
 > `danger-full-access` 意味着模型在你机器上几乎不受限（可写工作区外、可起进程）。只给自己的私用连接器，别共享授权页。
 

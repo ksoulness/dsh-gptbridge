@@ -92,5 +92,6 @@
   },
   "adapterPort": 18080,
   "auditRetentionDays": 30,
-  "runPermissionPreset": "danger-full-access"
+  "runPermissionPreset": "danger-full-access",
+  "runPermissionPresetMode": "enforce"
 }

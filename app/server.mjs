@@ -213,7 +213,7 @@ server.listen(PORT, HOST, () => {
     if (pruned > 0) log(`audit pruned ${pruned} rows (retention ${days}d)`)
   } catch { /* 清理失败不影响启动 */ }
   const guard = createGuard({ store, config: { issuer, resource, scope: cfg.scope, exposedTools: exposed, toolScope: cfg.toolScope ?? {} } })
-  const mcp = createMcp({ config: { exposedTools: exposed, runPermissionPreset: cfg.runPermissionPreset ?? 'danger-full-access' }, guard, upstream: createUpstream(upstreamUrl, { headers: upstreamHeaders, headersFactory: upstreamHeaderFactory }), audit: (ev, d) => store.audit(ev, d) })
+  const mcp = createMcp({ config: { exposedTools: exposed, runPermissionPreset: cfg.runPermissionPreset ?? 'danger-full-access', runPermissionPresetMode: cfg.runPermissionPresetMode ?? 'enforce' }, guard, upstream: createUpstream(upstreamUrl, { headers: upstreamHeaders, headersFactory: upstreamHeaderFactory }), audit: (ev, d) => store.audit(ev, d) })
   ctx = { issuer, resource, oauth, guard, mcp, port: actual }
   writeFileSync(ENDPOINT_FILE, JSON.stringify({
     url: resource, issuer, port: actual, boot: BOOT, exposedTools: exposed, scopes: cfg.scopes,

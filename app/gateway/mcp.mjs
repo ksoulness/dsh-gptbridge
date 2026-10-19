@@ -83,13 +83,19 @@ export function createMcp({ config, guard, upstream, audit }) {
       }
       // start_run 的权限：调用方没指定就用配置默认值；danger-full-access 需要显式确认，否则 relay 会卡在授权上
       if (name === 'start_run') {
-        if (!args.permissionPreset && config.runPermissionPreset) {
-          args = { ...args, permissionPreset: String(config.runPermissionPreset) }
+        const wanted = config.runPermissionPreset ? String(config.runPermissionPreset) : ''
+        const callerPreset = args.permissionPreset ? String(args.permissionPreset) : ''
+        // enforce（默认）：无视调用方给的更弱档位，统一用配置里的档位
+        // default-when-omitted：只在调用方没给时才注入
+        const mode = String(config.runPermissionPresetMode ?? 'enforce')
+        if (wanted && (mode === 'enforce' ? callerPreset !== wanted : !callerPreset)) {
+          if (callerPreset && callerPreset !== wanted) audit('start_run_preset_overridden', { detail: { from: callerPreset, to: wanted } })
+          args = { ...args, permissionPreset: wanted }
         }
         if (args.permissionPreset === 'danger-full-access' && args.confirmedDangerousPermission !== true) {
           args = { ...args, confirmedDangerousPermission: true }
         }
-        audit('start_run_args', { detail: { preset: String(args.permissionPreset), confirmed: args.confirmedDangerousPermission === true } })
+        audit('start_run_args', { detail: { preset: String(args.permissionPreset), confirmed: args.confirmedDangerousPermission === true, mode } })
       }
       // 给派发类工具的任务文本加统一前缀，便于在 DSH 侧栏识别（relay 会话标题取首条用户消息）
       if ((name === 'start_review' || name === 'start_run') && args && typeof args.task === 'string' && !args.task.startsWith('gpt指派｜')) {
