@@ -74,3 +74,25 @@
 | 工具列表为空 | 上游 relay 不可用（工具表不缓存失败） | 重启 DSH 后重连；或先跑 `run-relay.mjs` 看工具面 |
 | 只能看到很少工具 | `exposedTools` 被改小 | 改 `app/config/config.json` 后重启适配器 |
 | 每次都要重新授权 | refresh 被拒（删过 sqlite / 密钥变了） | 属预期：删连接器重新添加 |
+
+---
+
+## 7. 权限档与"任务卡住"
+
+| 你的诉求 | 用哪个工具 | 实际权限 |
+|---|---|---|
+| 只看不改（审查、核对） | `start_review` | 永远 `read-only`（relay 不接受覆盖） |
+| 要改文件/跑命令 | **`start_run`** | 默认 `danger-full-access`（适配器注入）；也可在 config 里收紧为 `workspace-write` |
+| 会话卡在"需要关注/权限被降级" | `reconcile_permissions { sessionId }` | 重试恢复原权限档 |
+
+常见"卡住"的原因就是：用 `start_review` 派了写任务，或用 `start_run` 但权限只有 `workspace-write`，越界动作在等人工确认——远端没人点，就一直等。
+
+## 8. 推荐调用姿势
+
+```text
+# 只读审查
+start_review { workspace, task, provider, model, authorizationBasis:"explicit-user-request", sessionMode:"fresh" }
+
+# 需要写入/执行（默认拿到完全权限）
+start_run   { workspace, task, provider, model, authorizationBasis:"explicit-user-request", sessionMode:"fresh" }
+```

@@ -23,7 +23,8 @@
     "steer_run",
     "cancel_run",
     "read_notifications",
-    "archive_terminal_session"
+    "archive_terminal_session",
+    "reconcile_permissions"
   ],
   "allowedReadTools": [
     "doctor",
@@ -43,7 +44,8 @@
     "reply_run",
     "steer_run",
     "cancel_run",
-    "archive_terminal_session"
+    "archive_terminal_session",
+    "reconcile_permissions"
   ],
   "toolScope": {
     "list_workspaces": "dsh:read"
@@ -59,14 +61,36 @@
   ],
   "logRetentionDays": 14,
   "rateLimits": {
-    "authorize": { "windowMs": 60000, "limit": 20 },
-    "token": { "windowMs": 60000, "limit": 30 },
-    "register": { "windowMs": 60000, "limit": 5 },
-    "revoke": { "windowMs": 60000, "limit": 20 },
-    "mcp": { "windowMs": 60000, "limit": 120 },
-    "metadata": { "windowMs": 60000, "limit": 60 },
-    "other": { "windowMs": 60000, "limit": 60 }
+    "authorize": {
+      "windowMs": 60000,
+      "limit": 20
+    },
+    "token": {
+      "windowMs": 60000,
+      "limit": 30
+    },
+    "register": {
+      "windowMs": 60000,
+      "limit": 5
+    },
+    "revoke": {
+      "windowMs": 60000,
+      "limit": 20
+    },
+    "mcp": {
+      "windowMs": 60000,
+      "limit": 120
+    },
+    "metadata": {
+      "windowMs": 60000,
+      "limit": 60
+    },
+    "other": {
+      "windowMs": 60000,
+      "limit": 60
+    }
   },
   "adapterPort": 18080,
-  "auditRetentionDays": 30
+  "auditRetentionDays": 30,
+  "runPermissionPreset": "danger-full-access"
 }

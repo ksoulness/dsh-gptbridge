@@ -113,6 +113,24 @@ cloudflared tunnel --config .\config\tunnel\config.yml run
 
 > relay 自身还有 `setup_*` / `start_service` / `stop_service` / `open_service` 等 10 个运维工具，默认**不暴露**。
 
+## 权限与"卡住"（重要）
+
+relay 的三个权限档：`read-only` / `workspace-write` / `danger-full-access`。
+
+- **`start_review` 永远是 `read-only`**（relay 设计如此，不接受 `permissionPreset`）。要写东西必须用 `start_run`。
+- `start_run` 如果调用方**不传** `permissionPreset`，relay 默认也是 `read-only`；而 `workspace-write` 一旦碰到越界写入或需要确认的动作，会**等人点确认** —— 远端连接器没人点，表现就是"卡住不动"。
+- 因此本适配器对 `start_run` 做了默认注入：`permissionPreset` 取 `app/config/config.json` 的 `runPermissionPreset`（默认 `danger-full-access`），并在选到危险档时补 `confirmedDangerousPermission: true`。
+
+想收紧就改配置：
+
+```jsonc
+// app/config/config.json
+{ "runPermissionPreset": "workspace-write" }   // 或 "read-only"
+```
+
+> `danger-full-access` 意味着模型在你机器上几乎不受限（可写工作区外、可起进程）。只给自己的私用连接器，别共享授权页。
+
+另外暴露了第 17 个工具 **`reconcile_permissions`**（参数只有 `sessionId`）：当某会话因为权限被降级/"需要关注"而停住时，用它重试恢复原权限档。
 ## 目录结构
 
 ```

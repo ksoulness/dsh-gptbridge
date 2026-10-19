@@ -81,6 +81,16 @@ export function createMcp({ config, guard, upstream, audit }) {
           return jsonRpcErr(id, -32602, 'INVALID_PARAMS', { unexpected: extra })
         }
       }
+      // start_run 的权限：调用方没指定就用配置默认值；danger-full-access 需要显式确认，否则 relay 会卡在授权上
+      if (name === 'start_run') {
+        if (!args.permissionPreset && config.runPermissionPreset) {
+          args = { ...args, permissionPreset: String(config.runPermissionPreset) }
+        }
+        if (args.permissionPreset === 'danger-full-access' && args.confirmedDangerousPermission !== true) {
+          args = { ...args, confirmedDangerousPermission: true }
+        }
+        audit('start_run_args', { detail: { preset: String(args.permissionPreset), confirmed: args.confirmedDangerousPermission === true } })
+      }
       // 给派发类工具的任务文本加统一前缀，便于在 DSH 侧栏识别（relay 会话标题取首条用户消息）
       if ((name === 'start_review' || name === 'start_run') && args && typeof args.task === 'string' && !args.task.startsWith('gpt指派｜')) {
         args = { ...args, task: 'gpt指派｜' + args.task }
