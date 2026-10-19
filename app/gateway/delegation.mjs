@@ -147,8 +147,14 @@ export function createDelegation({ config = {}, audit = () => {} } = {}) {
     if (typeof sessionId !== 'string' || !SESSION_ID.test(sessionId)) return { renamed: false, state: 'invalid_session_id' }
     const cur = currentTitle(sessionId)
     if (!cur) return { renamed: false, state: 'title_unavailable' }
-    if (cur.startsWith(prefix)) return { renamed: false, state: 'already_prefixed', title: cur }
-    return renameSession(sessionId, prefix + cur)
+    // 先剥掉已有的同类前缀（gpt指派- / gpt指派｜ / codex指派- 等），避免叠加成 gpt指派-codex指派-gpt指派｜…
+    const stripped = cur.replace(/^(?:gpt指派[-｜]\s*|codex指派[-｜]\s*)+/u, '').trim()
+    const base = stripped || cur
+    const target = prefix + base
+    if (cur === target) return { renamed: false, state: 'already_prefixed', title: cur }
+    const normalized = target !== prefix + cur
+    const out = await renameSession(sessionId, target)
+    return normalized ? { ...out, normalized_from: cur } : out
   }
 
   const localTools = [
