@@ -1,0 +1,72 @@
+{
+  "issuerNote": "issuer / resource 在运行时按真实监听端口生成（http://127.0.0.1:<port>）；公网部署时把 publicUrl 改成你自己的 https 域名",
+  "upstreamUrl": "",
+  "scope": "dsh:read",
+  "scopes": [
+    "dsh:read"
+  ],
+  "accessTtlMs": 3600000,
+  "refreshTtlMs": 2592000000,
+  "exposedTools": [
+    "doctor",
+    "list_workspaces",
+    "list_workspace_sessions",
+    "list_capabilities",
+    "start_review",
+    "start_run",
+    "get_run",
+    "get_run_summary",
+    "wait_run",
+    "list_runs",
+    "get_operation",
+    "reply_run",
+    "steer_run",
+    "cancel_run",
+    "read_notifications",
+    "archive_terminal_session"
+  ],
+  "allowedReadTools": [
+    "doctor",
+    "list_workspaces",
+    "list_workspace_sessions",
+    "list_capabilities",
+    "get_run",
+    "get_run_summary",
+    "list_runs",
+    "get_operation",
+    "read_notifications"
+  ],
+  "allowedControlTools": [
+    "start_review",
+    "start_run",
+    "wait_run",
+    "reply_run",
+    "steer_run",
+    "cancel_run",
+    "archive_terminal_session"
+  ],
+  "toolScope": {
+    "list_workspaces": "dsh:read"
+  },
+  "limits": {
+    "maxBodyBytes": 1048576,
+    "maxConcurrent": 8,
+    "ratePerMinute": 120
+  },
+  "publicUrl": "https://mcp.example.com",
+  "allowedHosts": [
+    "mcp.example.com"
+  ],
+  "logRetentionDays": 14,
+  "rateLimits": {
+    "authorize": { "windowMs": 60000, "limit": 20 },
+    "token": { "windowMs": 60000, "limit": 30 },
+    "register": { "windowMs": 60000, "limit": 5 },
+    "revoke": { "windowMs": 60000, "limit": 20 },
+    "mcp": { "windowMs": 60000, "limit": 120 },
+    "metadata": { "windowMs": 60000, "limit": 60 },
+    "other": { "windowMs": 60000, "limit": 60 }
+  },
+  "adapterPort": 18080,
+  "auditRetentionDays": 30
+}

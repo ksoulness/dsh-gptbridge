@@ -1,0 +1,45 @@
+# P2-B-LOCAL · 隔离 ACP 使用本地模型路由（复用生产非敏感结构，不复制任何凭据）
+#
+# 说明：
+#   - 生产实际路由：provider=local-provider / model=cn:deepseek-v4.1-flash / api=openai-completions
+#   - 这里直连 NAS 模型服务（127.0.0.1:8080），凭据由启动环境注入
+#   - 官方 DeepSeek 路由（llm-deepseek / llm-deepseek-account）显式禁用，杜绝回退
+#   - 凭据：apiKeyEnv=DSH_API_KEY（由启动环境提供，不复制生产凭据文件）
+
+- id: llm-deepseek
+  disabled: true
+
+- id: llm-deepseek-account
+  disabled: true
+
+- id: llm-retry
+  disabled: true
+
+- id: llm-pi-ai
+  config:
+    providers:
+      local-provider:
+        apiKeyEnv: DSH_API_KEY
+        displayName: WorkBuddy2API NAS (isolated)
+        api: openai-completions
+        baseURL: http://127.0.0.1:8080/v1
+        models:
+          - id: 'cn:deepseek-v4.1-flash'
+            name: CN DeepSeek V4.1 Flash · isolated
+            contextWindow: 1000000
+            input:
+              - text
+            reasoningEfforts:
+              low: low
+              high: high
+              max: max
+
+- id: acp
+  config:
+    provider: local-provider
+    model: 'cn:deepseek-v4.1-flash'
+
+- id: session-persistence-jsonl
+  config:
+    root: !!js dshHomePath('sessions')
+    compression: none

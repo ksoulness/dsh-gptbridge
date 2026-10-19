@@ -1,0 +1,24 @@
+# 运行态与凭据：一律不进版本库
+app/config/config.json
+config/mcp-manager.json
+app/config/secrets/
+config/tunnel/
+app/state/
+app/logs/
+logs/
+state/
+*.sqlite
+*.sqlite-journal
+*.log
+*.bak
+*.bak-*
+run.json
+endpoint.json
+watchdog.heartbeat
+watchdog.lock
+
+# 系统垃圾
+.DS_Store
+Thumbs.db
+desktop.ini
+node_modules/

@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "updated_at": "1970-01-01T00:00:00.000Z",
+  "readOnly": true,
+  "exposedTools": [
+    "doctor",
+    "list_workspaces",
+    "list_workspace_sessions",
+    "list_capabilities",
+    "start_review",
+    "start_run",
+    "get_run",
+    "get_run_summary",
+    "wait_run",
+    "list_runs",
+    "get_operation",
+    "reply_run",
+    "steer_run",
+    "cancel_run",
+    "read_notifications",
+    "archive_terminal_session"
+  ],
+  "notes": "这个文件只用于 start-relay-adapter.ps1 读取默认暴露的工具集；真正的白名单在 app/config/config.json 的 exposedTools / allowedReadTools / allowedControlTools"
+}

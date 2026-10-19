@@ -1,0 +1,27 @@
+{
+  "name": "dsh-gptbridge",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bridge remote MCP clients (ChatGPT connectors, Codex, etc.) to a local DSH (DeepSeek Harness) Relay MCP: OAuth 2.1 AS + tool allowlist proxy + Cloudflare Tunnel friendly.",
+  "type": "module",
+  "main": "app/server.mjs",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node app/server.mjs",
+    "test:regress": "node app/tests/run-regress.mjs",
+    "test:relay": "node app/tests/run-relay.mjs",
+    "test:local": "node app/tests/run-local.mjs",
+    "test:public-sim": "node app/tests/run-public-sim.mjs"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "mcp",
+    "oauth",
+    "cloudflare-tunnel",
+    "chatgpt-connector"
+  ],
+  "license": "MIT"
+}
